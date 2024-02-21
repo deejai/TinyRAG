@@ -3,6 +3,7 @@ from tkinter import ttk, scrolledtext
 import time
 from trag_server.rag_search import search
 from trag_server.sql_database import get_connection
+from trag_server.openai import ask_gpt
 from textwrap import dedent, indent
 import requests
 import json
@@ -37,7 +38,7 @@ def get_app():
 
     def chatbot_response(user_message):
         response_limit = 100
-        rag_search_results = search(["main"], user_message, 3)
+        rag_search_results = search(["main"], user_message, 6)
         rag_search_results_chunk = '\n'.join(rag_search_results)
         prompt = dedent(f"""
         <|user|>
@@ -45,22 +46,17 @@ def get_app():
 {indent(rag_search_results_chunk, '        ')}
         ### End of Results
 
-        Contestant, you have 5 seconds to answer the following. Quick, go!
+
         {user_message}
 
-        (Note: Please keep your response to 1-2 short sentences.)
         <|assistant|>
         """).strip()
 
         print(prompt)
 
-        headers = {'Content-Type': 'application/json'}
-        response = requests.post("http://localhost:8080/completion", data=json.dumps({
-            "prompt": prompt,
-            "n_predict": response_limit
-        }), headers=headers, proxies={})
+        response = ask_gpt(prompt)
 
-        return re.sub(r"[\W\s]+$", "", response.json()["content"].strip())
+        return response
 
     def append_chat_message(chat_widget, message, user="User"):
         if not message.strip():
@@ -77,7 +73,6 @@ def get_app():
         message_entry.delete(0, tk.END)
 
         if user == "User":
-            # Simulate getting a response from the chatbot
             response = chatbot_response(message)
             append_chat_message(chat_widget, response, user="Chatbot")
 

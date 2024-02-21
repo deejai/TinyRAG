@@ -1,0 +1,6 @@
+[submodule "models/all-MiniLM-L6-v2"]
+	path = models/all-MiniLM-L6-v2
+	url = https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+[submodule "llama.cpp"]
+	path = llama.cpp
+	url = https://github.com/ggerganov/llama.cpp

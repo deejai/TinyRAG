@@ -1,4 +1,4 @@
-name: trag
+name: tiny-rag
 channels:
   - pytorch
   - conda-forge
