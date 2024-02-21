@@ -97,7 +97,7 @@ def get_app():
         tree.after(1000, lambda: refresh_document_list(tree))
 
     root = tk.Tk()
-    root.title("T-Rag: Your Tiny Document Assistant")
+    root.title("Tiny RAG Document Assistant")
     root.resizable(False, False)  # Make the window non-resizable
 
     # Split the main window into two frames

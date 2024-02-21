@@ -18,6 +18,24 @@ ingest_document_running = False
 
 main_faiss_container = None
 
+from bs4 import BeautifulSoup  # Import BeautifulSoup
+
+def extract_text_from_html(path):
+    with open(path, 'r', encoding='utf-8') as file:
+        html_content = file.read()
+    soup = BeautifulSoup(html_content, 'html.parser')
+    return soup.get_text()
+
+def extract_text_by_file_type(doc_path):
+    if doc_path.endswith('.pdf'):
+        return extract_text(doc_path)  # Assuming extract_text is for PDFs
+    elif doc_path.endswith('.html'):
+        return extract_text_from_html(doc_path)
+    elif doc_path.endswith('.md') or doc_path.endswith('.txt'):
+        with open(doc_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    else:
+        return None
 
 def ingest_document(doc_id, doc_name):
     global ingest_document_running
@@ -27,11 +45,15 @@ def ingest_document(doc_id, doc_name):
     c.execute("update Document set status='in progress' where id=?", (doc_id,))
     conn.commit()
     doc_path = os.path.join(DOCUMENTS_DIR, doc_name)
-    doc_text = extract_text(doc_path)
-    if len(doc_text) < 10:
+    
+    # Use the new function to extract text based on file type
+    doc_text = extract_text_by_file_type(doc_path)
+    
+    if not doc_text or len(doc_text) < 10:
         ingest_document_running = False
         logger.info("Document does not contain enough text")
         return
+    
     doc_chunks = split_text_into_chunks(doc_text)
     doc_embeddings = create_embeddings(doc_chunks)
     prev_highest_index = main_faiss_container.size()
