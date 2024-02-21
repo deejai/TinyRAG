@@ -132,3 +132,4 @@ dependencies:
       - pillow==10.2.0
       - tqdm==4.66.1
       - ucall==0.5.1
+      - openai
