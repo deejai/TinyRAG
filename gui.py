@@ -38,7 +38,7 @@ def get_app():
 
     def chatbot_response(user_message):
         response_limit = 100
-        rag_search_results = search(["main"], user_message, 6)
+        rag_search_results = search(["main"], user_message, 5)
         rag_search_results_chunk = '\n'.join(rag_search_results)
         prompt = dedent(f"""
         <|user|>
