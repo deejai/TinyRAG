@@ -133,3 +133,4 @@ dependencies:
       - tqdm==4.66.1
       - ucall==0.5.1
       - openai
+      - python-dotenv
