@@ -90,7 +90,7 @@ def check_new_docs():
     while True:
         db_docs = set(get_document_names(conn))
 
-        dir_docs = set([d for d in os.listdir(DOCUMENTS_DIR) if d[-d.rfind("."):] in [".txt",".md",".html",".pdf"]])
+        dir_docs = set([d for d in os.listdir(DOCUMENTS_DIR) if d[-(len(d)-d.rfind(".")):] in [".txt",".md",".html",".pdf"]])
 
         new_docs = dir_docs - db_docs
 
